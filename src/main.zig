@@ -3,6 +3,11 @@ const builtin = @import("builtin");
 pub const c = @import("c");
 
 pub const Window = *c.GLFWwindow;
+pub const VulkanInstance = c.VkInstance;
+pub const VulkanSurface = c.VkSurfaceKHR;
+pub const VulkanAllocationCallbacks = c.VkAllocationCallbacks;
+pub const VulkanResult = c.VkResult;
+pub const VulkanProc = c.GLFWvkproc;
 
 pub const WindowOptions = struct {
     width: u32 = 800,
@@ -73,6 +78,25 @@ pub fn nativeCocoaWindow(window: Window) ?*anyopaque {
 
 pub fn rawWindow(window: Window) *anyopaque {
     return @ptrCast(window);
+}
+
+pub fn getRequiredInstanceExtensions() ?[]const [*:0]const u8 {
+    var count: u32 = 0;
+    const extensions = c.glfwGetRequiredInstanceExtensions(&count) orelse return null;
+    return @ptrCast(extensions[0..count]);
+}
+
+pub fn getInstanceProcAddress(instance: VulkanInstance, procname: [*:0]const u8) VulkanProc {
+    return c.glfwGetInstanceProcAddress(instance, procname);
+}
+
+pub fn createWindowSurface(
+    instance: VulkanInstance,
+    window: Window,
+    allocation_callbacks: ?*const VulkanAllocationCallbacks,
+    surface: *VulkanSurface,
+) VulkanResult {
+    return c.glfwCreateWindowSurface(instance, window, allocation_callbacks, surface);
 }
 
 pub fn extentFromFramebufferSize(width: c_int, height: c_int) Extent2D {
