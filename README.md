@@ -20,7 +20,13 @@ to be available to Zig's linker.
 ## Usage
 
 ```sh
-zig fetch --save git+ssh://git@github.com/HissingRat/zig-glfw.git
+zig fetch --save git+https://github.com/HissingRat/zig-glfw.git
+```
+
+For local development, a path dependency works too:
+
+```sh
+zig fetch --save /Users/andy/Desktop/ZigProjects/zig-glfw
 ```
 
 In `build.zig`:
@@ -66,6 +72,14 @@ const result = glfw.createWindowSurface(instance, window, null, &surface);
 The wrapper intentionally does not depend on `vulkan-zig`; it uses the Vulkan C
 types surfaced by GLFW's translated header. Consumers can cast those handles to
 their own Vulkan binding types at their API boundary.
+
+Graphics libraries that keep GLFW outside their core can build their own
+provider/adapter from these functions. The intended boundary is:
+
+- `getRequiredInstanceExtensions()` supplies the instance extensions.
+- `getInstanceProcAddress(...)` supplies Vulkan loader entry points.
+- `createWindowSurface(...)` creates the window surface for an existing Vulkan
+  instance.
 
 For Metal, GLFW does not provide a Metal surface API. On macOS this wrapper only
 exposes `nativeCocoaWindow(window)`, which is enough for a graphics library to

@@ -19,6 +19,10 @@ pub const WindowOptions = struct {
 pub const Extent2D = struct {
     width: u32,
     height: u32,
+
+    pub fn isZero(self: Extent2D) bool {
+        return self.width == 0 or self.height == 0;
+    }
 };
 
 pub const Error = error{
