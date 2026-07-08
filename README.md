@@ -28,12 +28,6 @@ libraries such as `gdi32`.
 zig fetch --save git+https://github.com/HissingRat/zig-glfw.git
 ```
 
-For local development, a path dependency works too:
-
-```sh
-zig fetch --save /Users/andy/Desktop/ZigProjects/zig-glfw
-```
-
 In `build.zig`:
 
 ```zig
