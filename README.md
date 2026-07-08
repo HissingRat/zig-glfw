@@ -10,12 +10,17 @@ The package currently mirrors the GLFW surface needed by `vkmtl` examples:
 - framebuffer extent queries
 - Vulkan interop helpers from GLFW
 - Cocoa native window access on macOS
+- Windows builds through GLFW's Win32 backend
 
 GLFW itself is downloaded through `build.zig.zon`; consumers do not need a
 system GLFW install.
 
 Linux builds use GLFW's X11 backend and require the usual X11 system libraries
 to be available to Zig's linker.
+Windows builds use GLFW's Win32 backend and can be cross-compiled with Zig,
+for example `zig build -Dtarget=x86_64-windows-gnu`.
+MSVC targets may require a local Windows SDK so Zig can find system import
+libraries such as `gdi32`.
 
 ## Usage
 

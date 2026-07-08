@@ -154,7 +154,24 @@ fn addGlfw(
                 .flags = common_flags,
             });
         },
-        else => @panic("zig-glfw currently wires GLFW for macOS and Linux only."),
+        .windows => {
+            lib.root_module.addCMacro("_GLFW_WIN32", "1");
+            lib.root_module.addCSourceFiles(.{
+                .root = glfw_dep.path("src"),
+                .files = &.{
+                    "wgl_context.c",
+                    "win32_init.c",
+                    "win32_joystick.c",
+                    "win32_module.c",
+                    "win32_monitor.c",
+                    "win32_thread.c",
+                    "win32_time.c",
+                    "win32_window.c",
+                },
+                .flags = common_flags,
+            });
+        },
+        else => @panic("zig-glfw currently wires GLFW for macOS, Linux, and Windows only."),
     }
 
     linkPlatformLibraries(lib.root_module, target.result.os.tag);
@@ -178,6 +195,9 @@ fn linkPlatformLibraries(module: *std.Build.Module, os_tag: std.Target.Os.Tag) v
             module.linkSystemLibrary("dl", .{});
             module.linkSystemLibrary("m", .{});
             module.linkSystemLibrary("pthread", .{});
+        },
+        .windows => {
+            module.linkSystemLibrary("gdi32", .{});
         },
         else => {},
     }
